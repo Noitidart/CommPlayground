@@ -1,0 +1,9 @@
+@-moz-document url("chrome://browser/content/browser.xul") {
+	#cui_comm {
+		list-style-image: url('chrome://comm/content/resources/images/icon-color16.png');
+	}
+	#cui_comm[cui-areatype="menu-panel"],
+	toolbarpaletteitem[place="palette"] > #cui_comm {
+		list-style-image: url('chrome://comm/content/resources/images/icon-color32.png');
+	}
+}

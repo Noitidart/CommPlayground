@@ -9,17 +9,18 @@ var gBsComm;
 var gWinComm;
 
 const MATCH_APP = 1;
+const MATCH_TWITTER = 2;
 
 // start - about module
-var aboutFactor;
+var aboutFactory;
 function AboutPage() {}
 
 function initAndRegisterAbout() {
 	// init it
 	AboutPage.prototype = Object.freeze({
-		classDescription: 'not yet localized', // TODO: localize this
+		classDescription: formatStringFromNameCore('about_desc', 'main'),
 		contractID: '@mozilla.org/network/protocol/about;1?what=comm',
-		classID: Components.ID('{b95ad6bd-3865-40ac-8f87-f78fb0cb243e}'),
+		classID: Components.ID('{b95ad6bd-3865-40ac-8f87-f78fa0cb243e}'),
 		QueryInterface: XPCOMUtils.generateQI([Ci.nsIAboutModule]),
 
 		getURIFlags: function(aURI) {
@@ -44,7 +45,7 @@ function initAndRegisterAbout() {
 	});
 
 	// register it
-	aboutFactor = new AboutFactory(AboutPage);
+	aboutFactory = new AboutFactory(AboutPage);
 }
 
 function AboutFactory(component) {
@@ -74,8 +75,10 @@ var pageLoader = {
 	matches: function(aHREF, aLocation) {
 		// do your tests on aHREF, which is aLocation.href.toLowerCase(), return true if it matches
 		var href_lower = aLocation.href.toLowerCase();
-		if (href_lower.startsWith('about:screencastify') || href_lower.startsWith('https://screencastify')) {
+		if (href_lower.startsWith('about:com')) {
 			return MATCH_APP;
+		} else if (aLocation.host.toLowerCase() == 'twitter.com') {
+			return MATCH_TWITTER;
 		}
 	},
 	ready: function(aContentWindow) {
@@ -84,12 +87,23 @@ var pageLoader = {
 		// to test if frame do `if (aContentWindow.frameElement)`
 
 		var contentWindow = aContentWindow;
-		console.log('ready enter');
 
-		var href_lower = contentWindow.location.href.toLowerCase();
 		switch (pageLoader.matches(contentWindow.location.href, contentWindow.location)) {
-			default:
-				content.location.reload();
+			case MATCH_APP:
+					gWinComm = new Comm.server.content(contentWindow); // cross-file-link884757009
+				break;
+			case MATCH_TWITTER:
+					var principal = contentWindow.document.nodePrincipal; // contentWindow.location.origin (this is undefined for about: pages) // docShell.chromeEventHandler.contentPrincipal (chromeEventHandler no longer has contentPrincipal)
+					// console.log('contentWindow.document.nodePrincipal', contentWindow.document.nodePrincipal);
+					// console.error('principal:', principal);
+					var sandbox = Cu.Sandbox(principal, {
+						sandboxPrototype: contentWindow,
+						wantXrays: true, // only set this to false if you need direct access to the page's javascript. true provides a safer, isolated context.
+						sameZoneAs: contentWindow,
+						wantComponents: false
+					});
+					Services.scriptloader.loadSubScript(core.addon.path.scripts + 'TwitterContentscript.js?' + core.addon.cache_key, sandbox, 'UTF-8');
+				break;
 		}
 	},
 	load: function(aContentWindow) {}, // triggered on page load if IGNORE_LOAD is false
@@ -198,8 +212,115 @@ var pageLoader = {
 };
 // end - pageLoader
 
+var progressListener = {
+	register: function() {
+		if (!docShell) {
+			console.error('NO DOCSHEL!!!');
+		} else {
+			var webProgress = docShell.QueryInterface(Ci.nsIInterfaceRequestor).getInterface(Ci.nsIWebProgress);
+			webProgress.addProgressListener(progressListener.listener, Ci.nsIWebProgress.NOTIFY_STATE_WINDOW);
+		}
+	},
+	unregister: function() {
+		if (!docShell) {
+			console.error('NO DOCSHEL!!!');
+		} else {
+			var webProgress = docShell.QueryInterface(Ci.nsIInterfaceRequestor).getInterface(Ci.nsIWebProgress);
+			webProgress.removeProgressListener(progressListener.listener);
+		}
+	},
+	listener: {
+		onStateChange: function(webProgress, aRequest, flags, status) {
+			console.log('progressListener :: onStateChange:', webProgress, aRequest, flags, status);
+			// // figure out the flags
+			var flagStrs = [];
+			for (var f in Ci.nsIWebProgressListener) {
+				if (!/a-z/.test(f)) { // if it has any lower case letters its not a flag
+					if (flags & Ci.nsIWebProgressListener[f]) {
+						flagStrs.push(f);
+					}
+				}
+			}
+			console.info('progressListener :: onStateChange, flagStrs:', flagStrs);
+
+			var url;
+			try {
+				url = aRequest.QueryInterface(Ci.nsIChannel).URI.spec;
+			} catch(ignore) {}
+			console.error('progressListener :: onStateChange, url:', url);
+
+			if (url) {
+				var url_lower = url.toLowerCase();
+				var window = webProgress.DOMWindow;
+				// console.log('progressListener :: onStateChange, DOMWindow:', window);
+
+				if (url_lower.startsWith('https://screencastify')) {
+					// if (aRequest instanceof Ci.nsIHttpChannel) {
+					// 	var aHttpChannel = aRequest.QueryInterface(Ci.nsIHttpChannel);
+					// 	console.error('progressListener :: onStateChange, aHttpChannel:', aHttpChannel);
+					// 	aHttpChannel.redirectTo(Services.io.newURI('data:text,url_blocked', null, null));
+					// } else {
+					// 	console.error('not instance of');
+					// }
+					/*
+					08:21:47 	<noit>	Aw crud, its saying NS_ERROR_NOT_AVAILABLE: Component returned failure code: 0x80040111 (NS_ERROR_NOT_AVAILABLE) [nsIChannel.contentType]
+					08:21:50 	<noit>	On Qi :(
+					08:24:33 	<palant>	nope, on nsIChannel.contentType - meaning that content type hasn't been received yet.
+					08:24:45 	<noit>	Ah
+					08:25:00 	<noit>	I tried doing aRequest.contentType = 'plain/text'; and then QI'ing nsiHTTP but that didnt work either
+					08:25:27 	<noit>	I am catching this in onStatusChange so I'll have to catch later to use redirectTo probably huh
+					08:25:33 	<palant>	not everything you get there will be an HTTP channel - do `instanceof Ci.nsIHTTPChannel`
+					08:25:47 	<noit>	ah
+					08:25:49 	<noit>	Thanks trying now
+					08:28:27 	<noit>	Wow this is nuts! So instanceof reports true, but the QI fails with that contentType error so nuts
+					08:31:43 	<noit>	I'm gonna try to recreate what redirectTo does. Looking it up
+					08:41:44 	<noit>	Crap I dont know what the heck redirectTo is doing but i figured out my too much recursion. I was setting window.location soon after calling aReqest.cancel. I wasn't waiting for the STATE_STOP. So now I wait for STATE_STOP then set window.locaiton :)
+					*/
+					if (flags & Ci.nsIWebProgressListener.STATE_START) {
+						aRequest.cancel(Cr.NS_BINDING_ABORTED);
+					} else if (flags & Ci.nsIWebProgressListener.STATE_STOP) {
+						// console.log('progressListener :: onStateChange, DOMWindow:', window);
+						if (window) {
+							window.location.href = url.replace(/https\:\/\/screencastify\/?/, 'about:screencastify');
+							console.log('progressListener :: onStateChange, ok replaced');
+						}
+					}
+				} else if (url_lower.startsWith('http://127.0.0.1/screencastify')) {
+					if (flags & Ci.nsIWebProgressListener.STATE_START) {
+						aRequest.cancel(Cr.NS_BINDING_ABORTED);
+					} else if (flags & Ci.nsIWebProgressListener.STATE_STOP) {
+						if (window) {
+							var access_denied = url_lower.includes('error=access_denied') || url_lower.includes('denied='); // `denied=` is for twitter, `error=access_denied` is for everything else
+							var authorized = !access_denied;
+							var serviceid = url_lower.match(/screencastify_([a-z]+)/)[1];
+							if (authorized) {
+								callInWorker('oauthAuthorized', {
+									serviceid,
+									href: url
+								})
+							}
+							window.location.href = 'about:screencastify?auth/' + serviceid + '/' + (authorized ? 'approved' : 'denied');
+							console.log('progressListener :: onStateChange, ok replaced');
+						}
+					}
+				} else if (url_lower == 'https://api.twitter.com/oauth/authorize' && (flags & Ci.nsIWebProgressListener.STATE_STOP) && window && window.document.documentElement.innerHTML.includes('screencastify_twitter?denied=')) {
+					// console.log('twitter auth innerHTML:', window.document.body.innerHTML);
+					window.location.href = 'about:screencastify?auth/twitter/denied';
+				}
+			}
+		},
+		QueryInterface: function QueryInterface(aIID) {
+			if (aIID.equals(Ci.nsIWebProgressListener) || aIID.equals(Ci.nsISupportsWeakReference) || aIID.equals(Ci.nsISupports)) {
+				return progressListener.listener;
+			}
+
+			throw Cr.NS_ERROR_NO_INTERFACE;
+		}
+	}
+};
+
 function init() {
-	gBsComm = new crossprocComm(core.addon.id);
+	gBsComm = new Comm.client.framescript(core.addon.id);
 
 	gBsComm.transcribeMessage('fetchCore', null, function(aArg, aComm) {
 		core = aArg.core;
@@ -208,7 +329,7 @@ function init() {
 		// addEventListener('unload', uninit, false);
 
 		pageLoader.register(); // pageLoader boilerpate
-		progressListener.register();
+		// progressListener.register();
 
 		try {
 			initAndRegisterAbout();
@@ -223,12 +344,12 @@ function init() {
 					// for about pages, need to reload it, as it it loaded before i registered it
 					content.window.location.reload(); //href = content.window.location.href.replace(/https\:\/\/screencastify\/?/i, 'about:screencastify'); // cannot use .reload() as the webNav.document.documentURI is now https://screencastify/
 				break;
-			// case MATCH_TWITTER:
-			// 		// for non-about pages, i dont reload, i just initiate the ready of pageLoader
-			// 		if (content.document.readyState == 'interactive' || content.document.readyState == 'complete') {
-			// 			pageLoader.onPageReady({target:content.document}); // IGNORE_LOAD is true, so no need to worry about triggering load
-			// 		}
-			// 	break;
+			case MATCH_TWITTER:
+					// for non-about pages, i dont reload, i just initiate the ready of pageLoader
+					if (content.document.readyState == 'interactive' || content.document.readyState == 'complete') {
+						pageLoader.onPageReady({target:content.document}); // IGNORE_LOAD is true, so no need to worry about triggering load
+					}
+				break;
 		}
 	});
 }
@@ -242,13 +363,14 @@ function uninit() { // link4757484773732
 		gWinComm.putMessage('uninit');
 	}
 
-	crossprocComm_unregAll();
+	Comm.server.unregisterAll('content');
+	Comm.client.unregisterAll('framescript');
 
 	pageLoader.unregister(); // pageLoader boilerpate
-	progressListener.unregister();
+	// progressListener.unregister();
 
-	if (aboutFactor) {
-		aboutFactor.unregister();
+	if (aboutFactory) {
+		aboutFactory.unregister();
 	}
 
 }
@@ -286,5 +408,20 @@ function genericCatch(aPromiseName, aPromiseToReject, aCaught) {
 		aPromiseToReject.reject(rejObj);
 	}
 }
+function formatStringFromNameCore(aLocalizableStr, aLoalizedKeyInCoreAddonL10n, aReplacements) {
+	// 051916 update - made it core.addon.l10n based
+    // formatStringFromNameCore is formating only version of the worker version of formatStringFromName, it is based on core.addon.l10n cache
 
+	try { var cLocalizedStr = core.addon.l10n[aLoalizedKeyInCoreAddonL10n][aLocalizableStr]; if (!cLocalizedStr) { throw new Error('localized is undefined'); } } catch (ex) { console.error('formatStringFromNameCore error:', ex, 'args:', aLocalizableStr, aLoalizedKeyInCoreAddonL10n, aReplacements); } // remove on production
+
+	var cLocalizedStr = core.addon.l10n[aLoalizedKeyInCoreAddonL10n][aLocalizableStr];
+	// console.log('cLocalizedStr:', cLocalizedStr, 'args:', aLocalizableStr, aLoalizedKeyInCoreAddonL10n, aReplacements);
+    if (aReplacements) {
+        for (var i=0; i<aReplacements.length; i++) {
+            cLocalizedStr = cLocalizedStr.replace('%S', aReplacements[i]);
+        }
+    }
+
+    return cLocalizedStr;
+}
 // end - common helper functions

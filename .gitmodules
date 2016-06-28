@@ -1,0 +1,3 @@
+[submodule "modules/modules/Comm"]
+	path = modules/modules/Comm
+	url = git@github.com:Noitidart/Comm

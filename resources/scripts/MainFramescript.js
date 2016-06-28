@@ -1,7 +1,7 @@
 // Imports
 const {interfaces: Ci, manager: Cm, results: Cr, utils:Cu} = Components;
 Cm.QueryInterface(Ci.nsIComponentRegistrar);
-Services.scriptloader.loadSubScript('chrome://commplayground/content/resources/scripts/Comm/Comm.js', this);
+Services.scriptloader.loadSubScript('chrome://comm/content/resources/scripts/Comm/Comm.js', this);
 
 // Globals
 var core = {addon: {id:'CommPlayground@jetpack'}}; // all that should be needed is core.addon.id, the rest is brought over on init

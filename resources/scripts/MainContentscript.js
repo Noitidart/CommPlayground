@@ -3,3 +3,5 @@ function loadSubScript(path) {
 	script.setAttribute('src', path);
 	document.documentElement.appendChild(src);
 }
+
+loadSubScript('chrome://comm/content/resources/scripts/Comm/Comm.js');

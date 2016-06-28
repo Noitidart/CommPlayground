@@ -7,10 +7,10 @@ Services.scriptloader.loadSubScript('chrome://commplayground/content/resources/s
 
 var core = {
     addon: {
-        name: 'CommPlayground',
-        id: 'CommPlayground@jetpack',
+        name: 'Comm',
+        id: 'Comm@jetpack',
         path: {
-            content: 'chrome://commplayground/content/'
+            content: 'chrome://comm/content/'
         }
     }
 };

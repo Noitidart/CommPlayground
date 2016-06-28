@@ -1,0 +1,3 @@
+[submodule "resources/scripts/Comm"]
+	path = resources/scripts/Comm
+	url = git@github.com:Noitidart/Comm

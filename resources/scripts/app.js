@@ -4,9 +4,11 @@ var gFsComm;
 var callInFramescript, callInMainworker, callInBootstrap;
 
 function preinit() {
+	console.log('in iprenit');
 	gFsComm = new Comm.client.content(init);
 }
 function init() {
+	console.log('in init');
 	({ callInFramescript, callInMainworker, callInBootstrap } = CommHelper.contentinframescript);
 
 	callInBootstrap('fetchCore', undefined, function(aArg, aComm) {

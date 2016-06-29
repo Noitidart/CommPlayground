@@ -1,5 +1,6 @@
 var core;
 var gFsComm;
+var callInFramescript, callInMainworker, callInBootstrap;
 
 function init() {
 	callInBootstrap('fetchCore', undefined, function(aArg, aComm) {
@@ -69,8 +70,10 @@ function loadSubScript(path) {
 loadSubScript('chrome://comm/content/resources/scripts/Comm/Comm.js');
 if (document.readyState == 'complete') {
 	gFsComm = new Comm.client.content(init);
+	({ callInFramescript, callInMainworker, callInBootstrap } = CommHelper.contentinframescript);
 } else {
 	window.addEventListener('DOMContentLoaded', function() {
 		gFsComm = new Comm.client.content(init);
+		({ callInFramescript, callInMainworker, callInBootstrap } = CommHelper.contentinframescript);
 	}, false);
 }

@@ -2,6 +2,7 @@
 const {classes: Cc, interfaces: Ci, manager: Cm, results: Cr, utils: Cu, Constructor: CC} = Components;
 Cu.import('resource://gre/modules/Services.jsm');
 Cu.importGlobalProperties(['Blob', 'URL']);
+var callInMainworker, callInContentinframescript, callInFramescript;
 
 // Globals
 var core = {
@@ -62,9 +63,7 @@ function startup(aData, aReason) {
 
 		gFsComm = new Comm.server.framescript(core.addon.id);
 
-        callInMainworker = CommHelper.bootstrap.callInMainworker;
-        callInContentinframescript = CommHelper.bootstrap.callInContentinframescript;
-        callInFramescript = CommHelper.bootstrap.callInFramescript;
+        ({ callInMainworker, callInContentinframescript, callInFramescript } = CommHelper.bootstrap);
 
         Services.mm.loadFrameScript(core.addon.path.scripts + 'MainFramescript.js?' + core.addon.cache_key, true);
 
@@ -121,9 +120,6 @@ function shutdown(aData, aReason) {
 }
 
 // start - addon functions
-var callInMainworker;
-var callInContentinframescript;
-var callInFramescript;
 function guiClick(e) {
 
 }

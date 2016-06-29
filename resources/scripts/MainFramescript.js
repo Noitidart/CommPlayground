@@ -3,6 +3,10 @@ const {interfaces: Ci, manager: Cm, results: Cr, utils:Cu} = Components;
 Cm.QueryInterface(Ci.nsIComponentRegistrar);
 Services.scriptloader.loadSubScript('chrome://comm/content/resources/scripts/Comm/Comm.js', this);
 
+var callInBootstrap;
+var callInContent;
+var callInMainworker;
+
 // Globals
 var core = {addon: {id:'Comm@jetpack'}}; // all that should be needed is core.addon.id, the rest is brought over on init
 this.gBsComm = undefined; // need to set this. instead var because otherwise Comm/Comm.js cant access it
@@ -90,7 +94,7 @@ var pageLoader = {
 
 		switch (pageLoader.matches(contentWindow.location.href, contentWindow.location)) {
 			case MATCH_APP:
-					this.gWinComm = new Comm.server.content(contentWindow); // cross-file-link884757009
+
 				break;
 			case MATCH_TWITTER:
 					var principal = contentWindow.document.nodePrincipal; // contentWindow.location.origin (this is undefined for about: pages) // docShell.chromeEventHandler.contentPrincipal (chromeEventHandler no longer has contentPrincipal)
@@ -103,6 +107,9 @@ var pageLoader = {
 						wantComponents: false
 					});
 					Services.scriptloader.loadSubScript(core.addon.path.scripts + 'TwitterContentscript.js?' + core.addon.cache_key, sandbox, 'UTF-8');
+
+					this.gWinComm = new Comm.server.content(contentWindow); // cross-file-link884757009
+					({ callInContent } = CommHelper.framescript);
 				break;
 		}
 	},
@@ -294,7 +301,7 @@ var progressListener = {
 							var authorized = !access_denied;
 							var serviceid = url_lower.match(/screencastify_([a-z]+)/)[1];
 							if (authorized) {
-								CommHelper.framescript.callInMainworker('oauthAuthorized', {
+								callInMainworker('oauthAuthorized', {
 									serviceid,
 									href: url
 								})
@@ -321,8 +328,9 @@ var progressListener = {
 
 function init() {
 	this.gBsComm = new Comm.client.framescript(core.addon.id);
+	({ callInBootstrap, callInMainworker } = CommHelper.framescript);
 
-	CommHelper.framescript.callInMainworker('fetchCore', undefined, function(aArg, aComm) {
+	callInMainworker('fetchCore', undefined, function(aArg, aComm) {
 		core = aArg;
 		console.log('ok updated core to:', core);
 
@@ -361,7 +369,7 @@ this.uninit = function() { // link4757484773732
 	removeEventListener('unload', uninit, false);
 
 	if (this.gWinComm) {
-		CommHelper.framescript.callInContent('uninit');
+		callInContent('uninit');
 	}
 
 	Comm.server.unregAll('content');

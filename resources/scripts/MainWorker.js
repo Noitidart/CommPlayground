@@ -524,4 +524,4 @@ function queryStringAsJson(aQueryString) {
 
 // startup
 gBsComm = new Comm.client.worker();
-{ callInBootstrap, callInChildworker1 } = CommHelper.mainworker;
+({ callInBootstrap, callInChildworker1 } = CommHelper.mainworker);

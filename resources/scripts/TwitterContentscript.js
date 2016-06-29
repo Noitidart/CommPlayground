@@ -68,12 +68,16 @@ function loadSubScript(path) {
 
 // startup
 loadSubScript('chrome://comm/content/resources/scripts/Comm/Comm.js');
-if (document.readyState == 'complete') {
+
+function preinit() {
 	gFsComm = new Comm.client.content(init);
 	({ callInFramescript, callInMainworker, callInBootstrap } = CommHelper.contentinframescript);
+}
+
+if (document.readyState == 'complete') {
+	preinit();
 } else {
 	window.addEventListener('DOMContentLoaded', function() {
-		gFsComm = new Comm.client.content(init);
-		({ callInFramescript, callInMainworker, callInBootstrap } = CommHelper.contentinframescript);
+		preinit();
 	}, false);
 }

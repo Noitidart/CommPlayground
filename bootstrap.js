@@ -2,7 +2,7 @@
 const {classes: Cc, interfaces: Ci, manager: Cm, results: Cr, utils: Cu, Constructor: CC} = Components;
 Cu.import('resource://gre/modules/Services.jsm');
 Cu.importGlobalProperties(['Blob', 'URL']);
-var callInMainworker, callInContentinframescript, callInFramescript;
+var callInMainworker, callInContentinframescript, callInFramescript, callInContent1;
 
 // Globals
 var core = {
@@ -53,17 +53,22 @@ var gAndroidMenuIds = [];
 var gCuiCssUri;
 
 function install() {}
-function uninstall() {}
+function uninstall(aData, aReason) {
+    if (aReason == ADDON_UNINSTALL) {
+		Cu.import('resource://gre/modules/osfile.jsm');
+		OS.File.removeDir(OS.Path.join(OS.Constants.Path.profileDir, 'jetpack', core.addon.id), {ignorePermissions:true, ignoreAbsent:true}); // will reject if `jetpack` folder does not exist
+	}
+}
 
 function startup(aData, aReason) {
 
     Services.scriptloader.loadSubScript('chrome://comm/content/resources/scripts/Comm/Comm.js', gBootstrap);
+    ({ callInMainworker, callInContentinframescript, callInFramescript, callInContent1 } = CommHelper.bootstrap);
+
     gWkComm = new Comm.server.worker(core.addon.path.scripts + 'MainWorker.js?' + core.addon.cache_key, ()=>core, function(aArg, aComm) {
         core = aArg;
 
 		gFsComm = new Comm.server.framescript(core.addon.id);
-
-        ({ callInMainworker, callInContentinframescript, callInFramescript } = CommHelper.bootstrap);
 
         Services.mm.loadFrameScript(core.addon.path.scripts + 'MainFramescript.js?' + core.addon.cache_key, true);
 

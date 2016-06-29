@@ -1,7 +1,7 @@
 // Imports
 importScripts('resource://gre/modules/osfile.jsm');
 importScripts('chrome://comm/content/resources/scripts/Comm/Comm.js');
-var callInBootstrap, callInChildworker1;
+var {callInBootstrap, callInChildworker1} = CommHelper.mainworker;
 
 // Globals
 var core;
@@ -524,4 +524,3 @@ function queryStringAsJson(aQueryString) {
 
 // startup
 gBsComm = new Comm.client.worker();
-({ callInBootstrap, callInChildworker1 } = CommHelper.mainworker);

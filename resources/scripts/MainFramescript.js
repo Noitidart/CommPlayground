@@ -1,11 +1,10 @@
 // Imports
 const {interfaces: Ci, manager: Cm, results: Cr, utils:Cu} = Components;
 Cm.QueryInterface(Ci.nsIComponentRegistrar);
+Cu.importGlobalProperties(['Blob', 'URL']);
 Services.scriptloader.loadSubScript('chrome://comm/content/resources/scripts/Comm/Comm.js', this);
 
-var callInBootstrap;
-var callInContent;
-var callInMainworker;
+var { callInBootstrap, callInMainworker, callInContent } = CommHelper.framescript;
 
 // Globals
 var core = {addon: {id:'Comm@jetpack'}}; // all that should be needed is core.addon.id, the rest is brought over on init
@@ -94,7 +93,7 @@ var pageLoader = {
 
 		switch (pageLoader.matches(contentWindow.location.href, contentWindow.location)) {
 			case MATCH_APP:
-
+					this.gWinComm = new Comm.server.content(contentWindow);
 				break;
 			case MATCH_TWITTER:
 					var principal = contentWindow.document.nodePrincipal; // contentWindow.location.origin (this is undefined for about: pages) // docShell.chromeEventHandler.contentPrincipal (chromeEventHandler no longer has contentPrincipal)
@@ -108,8 +107,7 @@ var pageLoader = {
 					});
 					Services.scriptloader.loadSubScript(core.addon.path.scripts + 'TwitterContentscript.js?' + core.addon.cache_key, sandbox, 'UTF-8');
 
-					this.gWinComm = new Comm.server.content(contentWindow); // cross-file-link884757009
-					({ callInContent } = CommHelper.framescript);
+					this.gWinComm = new Comm.server.content(contentWindow);
 				break;
 		}
 	},
@@ -328,7 +326,6 @@ var progressListener = {
 
 function init() {
 	this.gBsComm = new Comm.client.framescript(core.addon.id);
-	({ callInBootstrap, callInMainworker } = CommHelper.framescript);
 
 	callInMainworker('fetchCore', undefined, function(aArg, aComm) {
 		core = aArg;

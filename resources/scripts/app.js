@@ -1,22 +1,23 @@
 var core;
 var gFsComm;
+
 var callInFramescript, callInMainworker, callInBootstrap;
 
 function preinit() {
-	({ callInFramescript, callInMainworker, callInBootstrap } = CommHelper.contentinframescript);
 	gFsComm = new Comm.client.content(init);
 }
-
 function init() {
+	({ callInFramescript, callInMainworker, callInBootstrap } = CommHelper.contentinframescript);
+
 	callInBootstrap('fetchCore', undefined, function(aArg, aComm) {
 		core = aArg;
+		console.log('app.js core update - ', core);
 
 
 	});
 }
-
 function uninit() {
-
+	Comm.client.unregAll('content');
 }
 
 // start - common helper functions
@@ -65,18 +66,13 @@ function formatStringFromNameCore(aLocalizableStr, aLoalizedKeyInCoreAddonL10n, 
 
     return cLocalizedStr;
 }
-function loadSubScript(path) {
-	var script = document.createElement('srcipt');
-	script.setAttribute('src', path);
-	document.documentElement.appendChild(src);
-}
 
 // startup
-loadSubScript('chrome://comm/content/resources/scripts/Comm/Comm.js');
-
 if (document.readyState == 'complete') {
+	alert('here a');
 	preinit();
 } else {
+	alert('here');
 	window.addEventListener('DOMContentLoaded', function() {
 		preinit();
 	}, false);

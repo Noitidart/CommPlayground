@@ -5,6 +5,10 @@ var {callInBootstrap, callInChildworker1} = CommHelper.mainworker;
 
 // Globals
 var core;
+var gBsComm;
+
+var gChildComm;
+var callInChildworker;
 
 var OSStuff = {}; // global vars populated by init, based on OS
 
@@ -15,6 +19,10 @@ function init(objCore) { // function name init required for SIPWorker
 	// core and objCore is object with main keys, the sub props
 
 	core = objCore;
+
+	// lazy set up child worker
+	gChildComm = new Comm.server.worker(core.addon.path.scripts + 'ChildWorker.js');
+	callInChildworker = Comm.callInX.bind(null, 'gChildComm', null);
 
 	// add to core
 	core.os.name = OS.Constants.Sys.Name.toLowerCase();
@@ -76,6 +84,17 @@ function dummyForInstantInstantiate() {}
 
 function fetchCore() {
 	return core;
+}
+
+function doRoutine() {
+	callInChildworker('routine', undefined, function(aArg, aComm) {
+		var { __PROGRESS:progress, text } = aArg;
+		if (progress) {
+			console.log('progress - ', text);
+		} else {
+			console.log(text);
+		}
+	});
 }
 
 // start - common helper functions

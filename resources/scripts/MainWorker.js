@@ -19,7 +19,7 @@ function init(objCore) { // function name init required for SIPWorker
 	core.os.name = OS.Constants.Sys.Name.toLowerCase();
 	core.os.mname = core.os.toolkit.indexOf('gtk') == 0 ? 'gtk' : core.os.name; // mname stands for modified-name
 
-	core.add.path.storage = OS.Path.join(OS.Constants.Path.profileDir, 'jetpack', core.addon.id, 'simple-storage')
+	core.addon.path.storage = OS.Path.join(OS.Constants.Path.profileDir, 'jetpack', core.addon.id, 'simple-storage')
 
 	// load all localization pacakages
 	formatStringFromName('blah', 'main');
@@ -66,10 +66,9 @@ function init(objCore) { // function name init required for SIPWorker
 		default:
 			// do nothing special
 	}
-}
 
-// startup
-gBsComm = new Comm.client.worker();
+	return core;
+}
 
 // start - addon functions
 function dummyForInstantInstantiate() {}
@@ -104,7 +103,7 @@ function genericCatch(aPromiseName, aPromiseToReject, aCaught) {
 		aPromiseToReject.reject(rejObj);
 	}
 }
-// rev1 - https://gist.github.com/Noitidart/ec1e6b9a593ec7e3efed
+// rev2 - not yet updated to gist.github - https://gist.github.com/Noitidart/ec1e6b9a593ec7e3efed
 function xhr(aUrlOrFileUri, aOptions={}) {
 	// console.error('in xhr!!! aUrlOrFileUri:', aUrlOrFileUri);
 
@@ -116,7 +115,7 @@ function xhr(aUrlOrFileUri, aOptions={}) {
 		method: 'GET', // string
 		data: null // make it whatever you want (formdata, null, etc), but follow the rules, like if aMethod is 'GET' then this must be null
 	};
-	validateOptionsObj(aOptions, aOptionsDefaults);
+	aOptions = Object.assign(aOptionsDefaults, aOptions);
 
 	var cRequest = new XMLHttpRequest();
 
@@ -517,3 +516,6 @@ function queryStringAsJson(aQueryString) {
 
 	return JSON.parse(asJsonStringify);
 }
+
+// startup
+gBsComm = new Comm.client.worker();

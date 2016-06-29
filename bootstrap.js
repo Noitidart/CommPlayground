@@ -49,26 +49,25 @@ var gFsComm;
 
 var gAndroidMenuIds = [];
 
+var gCuiCssUri;
+
 function install() {}
 function uninstall() {}
 
 function startup(aData, aReason) {
 
     Services.scriptloader.loadSubScript('chrome://comm/content/resources/scripts/Comm/Comm.js', gBootstrap);
-    gWkComm = new Comm.server.worker(core.addon.path.scripts + 'MainWorker.js', ()=>{return core}, function(aArg, aComm) {
+    gWkComm = new Comm.server.worker(core.addon.path.scripts + 'MainWorker.js?' + core.addon.cache_key, ()=>core, function(aArg, aComm) {
         core = aArg;
 
 		gFsComm = new Comm.server.framescript(core.addon.id);
 
         Services.mm.loadFrameScript(core.addon.path.scripts + 'MainFramescript.js?' + core.addon.cache_key, true);
 
-        windowListener.register();
-
         // desktop:insert_gui
         if (core.os.name != 'android') {
     		// determine gCuiCssFilename for windowListener.register
     		gCuiCssUri = Services.io.newURI(core.addon.path.styles + 'cui.css', null, null);
-    		gGenCssUri = Services.io.newURI(core.addon.path.styles + 'chrome.css', null, null);
 
     		// insert cui
     		Cu.import('resource:///modules/CustomizableUI.jsm');
@@ -81,6 +80,9 @@ function startup(aData, aReason) {
     		});
     	}
 
+        // register must go after the above, as i set gCuiCssUri above
+        windowListener.register();
+
     });
     gWkComm.putMessage('dummyForInstantInstantiate');
 }
@@ -90,8 +92,8 @@ function shutdown(aData, aReason) {
 
 	Services.mm.removeDelayedFrameScript(core.addon.path.scripts + 'MainFramescript.js?' + core.addon.cache_key);
 
-    Comm.server.unregisterAll('framescript');
-    Comm.server.unregisterAll('worker');
+    Comm.server.unregAll('framescript');
+    Comm.server.unregAll('worker');
 
     // desktop_android:insert_gui
     if (core.os.name != 'android') {
@@ -117,6 +119,10 @@ function shutdown(aData, aReason) {
 // start - addon functions
 function guiClick(e) {
 
+}
+
+function fetchCore(aArg, aComm) {
+    return core;
 }
 
 var windowListener = {

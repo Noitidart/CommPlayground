@@ -322,7 +322,7 @@ var progressListener = {
 function init() {
 	gBsComm = new Comm.client.framescript(core.addon.id);
 
-	gBsComm.transcribeMessage('fetchCore', null, function(aArg, aComm) {
+	gBsComm.copyMessage('fetchCore', null, function(aArg, aComm) {
 		core = aArg.core;
 		console.log('ok updated core to:', core);
 
@@ -363,8 +363,8 @@ function uninit() { // link4757484773732
 		gWinComm.putMessage('uninit');
 	}
 
-	Comm.server.unregisterAll('content');
-	Comm.client.unregisterAll('framescript');
+	Comm.server.unregAll('content');
+	Comm.client.unregAll('framescript');
 
 	pageLoader.unregister(); // pageLoader boilerpate
 	// progressListener.unregister();

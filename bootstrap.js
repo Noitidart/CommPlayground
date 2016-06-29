@@ -62,6 +62,10 @@ function startup(aData, aReason) {
 
 		gFsComm = new Comm.server.framescript(core.addon.id);
 
+        callInMainworker = CommHelper.bootstrap.callInMainworker;
+        callInContentinframescript = CommHelper.bootstrap.callInContentinframescript;
+        callInFramescript = CommHelper.bootstrap.callInFramescript;
+
         Services.mm.loadFrameScript(core.addon.path.scripts + 'MainFramescript.js?' + core.addon.cache_key, true);
 
         // desktop:insert_gui
@@ -117,6 +121,9 @@ function shutdown(aData, aReason) {
 }
 
 // start - addon functions
+var callInMainworker;
+var callInContentinframescript;
+var callInFramescript;
 function guiClick(e) {
 
 }

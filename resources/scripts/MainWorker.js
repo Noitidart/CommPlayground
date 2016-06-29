@@ -73,6 +73,10 @@ function init(objCore) { // function name init required for SIPWorker
 // start - addon functions
 function dummyForInstantInstantiate() {}
 
+function fetchCore() {
+	return core;
+}
+
 // start - common helper functions
 function Deferred() {
 	this.resolve = null;

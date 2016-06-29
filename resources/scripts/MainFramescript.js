@@ -4,9 +4,9 @@ Cm.QueryInterface(Ci.nsIComponentRegistrar);
 Services.scriptloader.loadSubScript('chrome://comm/content/resources/scripts/Comm/Comm.js', this);
 
 // Globals
-var core = {addon: {id:'CommPlayground@jetpack'}}; // all that should be needed is core.addon.id, the rest is brought over on init
-var gBsComm;
-var gWinComm;
+var core = {addon: {id:'Comm@jetpack'}}; // all that should be needed is core.addon.id, the rest is brought over on init
+this.gBsComm = undefined; // need to set this. instead var because otherwise Comm/Comm.js cant access it
+this.gWinComm = undefined; // need to set this. instead var because otherwise Comm/Comm.js cant access it
 
 const MATCH_APP = 1;
 const MATCH_TWITTER = 2;
@@ -90,7 +90,7 @@ var pageLoader = {
 
 		switch (pageLoader.matches(contentWindow.location.href, contentWindow.location)) {
 			case MATCH_APP:
-					gWinComm = new Comm.server.content(contentWindow); // cross-file-link884757009
+					this.gWinComm = new Comm.server.content(contentWindow); // cross-file-link884757009
 				break;
 			case MATCH_TWITTER:
 					var principal = contentWindow.document.nodePrincipal; // contentWindow.location.origin (this is undefined for about: pages) // docShell.chromeEventHandler.contentPrincipal (chromeEventHandler no longer has contentPrincipal)
@@ -112,7 +112,7 @@ var pageLoader = {
 		console.warn('hostname page ready, but an error page loaded, so like offline or something, aHref:', aContentWindow.location.href, 'aDocURI:', aDocURI);
 	},
 	readyNonmatch: function(aContentWindow) {
-		gWinComm = null;
+		this.gWinComm = null;
 	},
 	loadNonmatch: function(aContentWindow) {},
 	errorNonmatch: function(aContentWindow, aDocURI) {},
@@ -294,7 +294,7 @@ var progressListener = {
 							var authorized = !access_denied;
 							var serviceid = url_lower.match(/screencastify_([a-z]+)/)[1];
 							if (authorized) {
-								callInWorker('oauthAuthorized', {
+								CommHelper.framescript.callInMainworker('oauthAuthorized', {
 									serviceid,
 									href: url
 								})
@@ -320,10 +320,10 @@ var progressListener = {
 };
 
 function init() {
-	gBsComm = new Comm.client.framescript(core.addon.id);
+	this.gBsComm = new Comm.client.framescript(core.addon.id);
 
-	gBsComm.copyMessage('fetchCore', null, function(aArg, aComm) {
-		core = aArg.core;
+	CommHelper.framescript.callInMainworker('fetchCore', undefined, function(aArg, aComm) {
+		core = aArg;
 		console.log('ok updated core to:', core);
 
 		// addEventListener('unload', uninit, false);
@@ -354,13 +354,14 @@ function init() {
 	});
 }
 
-function uninit() { // link4757484773732
+this.uninit = function() { // link4757484773732
 	// an issue with this unload is that framescripts are left over, i want to destory them eventually
 
+	console.error('DOING UNINIT');
 	removeEventListener('unload', uninit, false);
 
-	if (gWinComm) {
-		gWinComm.putMessage('uninit');
+	if (this.gWinComm) {
+		CommHelper.framescript.callInContent('uninit');
 	}
 
 	Comm.server.unregAll('content');
@@ -374,9 +375,6 @@ function uninit() { // link4757484773732
 	}
 
 }
-
-init();
-
 
 // start - common helper functions
 function Deferred() {
@@ -425,3 +423,6 @@ function formatStringFromNameCore(aLocalizableStr, aLoalizedKeyInCoreAddonL10n, 
     return cLocalizedStr;
 }
 // end - common helper functions
+
+// startup
+init();

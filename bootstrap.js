@@ -122,6 +122,8 @@ function shutdown(aData, aReason) {
 			domwin.NativeWindow.menu.remove(androidMenu.menuid);
 		}
 	}
+
+	windowListener.unregister();
 }
 
 // start - addon functions

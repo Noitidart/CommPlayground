@@ -81,6 +81,23 @@ function init(objCore) { // function name init required for SIPWorker
 
 // start - addon functions
 function dummyForInstantInstantiate() {}
+self.onclose = function() {
+	console.log('doing mainworker term proc');
+
+	workerComm_unregAll();
+
+	switch (core.os.mname) {
+		case 'android':
+
+				if (OSStuff.jenv) {
+					JNI.UnloadClasses(OSStuff.jenv);
+				}
+
+			break;
+	}
+
+	console.log('ok ready to terminate');
+}
 
 function fetchCore() {
 	return core;

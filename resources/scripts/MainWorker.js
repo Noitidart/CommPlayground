@@ -367,7 +367,7 @@ function safedForPlatFS(aStr, aOptions={}) {
 	}
 }
 
-// https://gist.github.com/Noitidart/7810121036595cdc735de2936a7952da -rev1
+// https://gist.github.com/Noitidart/7810121036595cdc735de2936a7952da -rev2
 function writeThenDir(aPlatPath, aContents, aDirFrom, aOptions={}) {
 	// tries to writeAtomic
 	// if it fails due to dirs not existing, it creates the dir

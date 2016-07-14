@@ -1,10 +1,27 @@
+var { utils:Cu } = Components;
+Cu.import('resource://gre/modules/Services.jsm');
+
+var gWhateverWorker;
+
 function install() {}
-function uninstall(aData, aReason) {}
+function uninstall() {}
 
 function startup(aData, aReason) {
-    new ChromeWorker('chrome://comm/content/resources/scripts/MainWorker.js');
+
+	Services.scriptloader.loadSubScript('chrome://comm/content/resources/scripts/Comm/Comm.js');
+	Services.scriptloader.loadSubScript('chrome://comm/content/resources/scripts/DirectoryWatcherPaths.js');
+	Services.scriptloader.loadSubScript('chrome://comm/content/resources/scripts/watcher/DirectoryWatcherMainthread.js');
+
+	DirectoryWatcherMainthreadInit('gWhateverWorker');
+
+	gWhateverWorker = new Comm.server.worker('chrome://comm/content/resources/scripts/MainWorker.js');
+	callInDirectoryWatcherWorker('dummystartup');
+	
 }
 
 function shutdown(aData, aReason) {
 	if (aReason == APP_SHUTDOWN) { return }
+
+	gWhateverWorker.unregister(); // or call `Comm.server.unregAll('worker')`
+
 }

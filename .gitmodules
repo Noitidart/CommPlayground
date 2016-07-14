@@ -1,3 +1,9 @@
 [submodule "resources/scripts/Comm"]
 	path = resources/scripts/Comm
 	url = git@github.com:Noitidart/Comm
+[submodule "resources/scripts/ostypes"]
+	path = resources/scripts/ostypes
+	url = git@github.com:Noitidart/ostypes
+[submodule "resources/scripts/watcher"]
+	path = resources/scripts/watcher
+	url = git@github.com:Noitidart/jscFileWatcher

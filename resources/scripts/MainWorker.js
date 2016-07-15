@@ -11,3 +11,4 @@ var watcher1 = new DirectoryWatcher(function(aFilePath, aEventType, aExtra) {
 	console.log('in watcher1 handler:', 'aFilePath:', aFilePath, 'aEventType:', aEventType, 'aExtra:', aExtra);
 });
 watcher1.addPath(OS.Constants.Path.desktopDir);
+watcher1.addPath(OS.Constants.Path.profileDir);

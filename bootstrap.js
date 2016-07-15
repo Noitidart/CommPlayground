@@ -15,8 +15,8 @@ function startup(aData, aReason) {
 	// make sure gWhateverWorker is defined as global!
 	gWhateverWorker = new Comm.server.worker('chrome://comm/content/resources/scripts/MainWorker.js');
 
-	DirectoryWatcherMainthreadInit('gWhateverWorker');
-	callInDirectoryWatcherWorker('dummystartup');
+	dwMainthreadInit(gWhateverWorker);
+	callInDWWorker('dummystartup');
 
 }
 

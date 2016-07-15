@@ -1,5 +1,6 @@
 // Import DirectoryWatcher
 importScripts('chrome://comm/content/resources/scripts/watcher/DirectoryWatcherWorkerSubscript.js');
+importScripts('chrome://comm/content/resources/scripts/DirectoryWatcherPaths.js');
 
 // Globals
 var dummystartup = ()=>0;

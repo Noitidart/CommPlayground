@@ -12,11 +12,12 @@ function startup(aData, aReason) {
 	Services.scriptloader.loadSubScript('chrome://comm/content/resources/scripts/DirectoryWatcherPaths.js');
 	Services.scriptloader.loadSubScript('chrome://comm/content/resources/scripts/watcher/DirectoryWatcherMainthread.js');
 
-	DirectoryWatcherMainthreadInit('gWhateverWorker');
-
+	// make sure gWhateverWorker is defined as global!
 	gWhateverWorker = new Comm.server.worker('chrome://comm/content/resources/scripts/MainWorker.js');
+
+	DirectoryWatcherMainthreadInit('gWhateverWorker');
 	callInDirectoryWatcherWorker('dummystartup');
-	
+
 }
 
 function shutdown(aData, aReason) {

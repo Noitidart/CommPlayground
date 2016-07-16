@@ -11,4 +11,9 @@ var watcher1 = new DirectoryWatcher(function(aFilePath, aEventType, aExtra) {
 	console.log('in watcher1 handler:', 'aFilePath:', aFilePath, 'aEventType:', aEventType, 'aExtra:', aExtra);
 });
 watcher1.addPath(OS.Constants.Path.desktopDir);
-watcher1.addPath(OS.Constants.Path.profileDir);
+// watcher1.addPath(OS.Constants.Path.profileDir);
+
+setTimeout(function() {
+	console.log('triggering remove path from mainworker');
+	watcher1.removePath(OS.Constants.Path.desktopDir).then(val=>console.log('mainworker removed:', val)).catch(caught=>console.error('caught:', err));
+}, 30000)

@@ -10,10 +10,10 @@ console.log('ok ready');
 var watcher1 = new DirectoryWatcher(function(aFilePath, aEventType, aExtra) {
 	console.log('in watcher1 handler:', 'aFilePath:', aFilePath, 'aEventType:', aEventType, 'aExtra:', aExtra);
 });
-watcher1.addPath(OS.Path.join(OS.Constants.Path.desktopDir));
-// watcher1.addPath(OS.Path.join(OS.Constants.Path.desktopDir, 'bin'));
+watcher1.addPath(OS.Path.join(OS.Constants.Path.desktopDir, 'dist'));
+watcher1.addPath(OS.Path.join(OS.Constants.Path.desktopDir, 'bin'));
 
-setTimeout(function() {
-	console.log('triggering remove path from mainworker');
-	watcher1.removePath(OS.Path.join(OS.Constants.Path.desktopDir)).then(val=>console.log('mainworker removed:', val)).catch(caught=>console.error('caught:', err));
-}, 10000);
+// setTimeout(function() {
+// 	console.log('triggering remove path from mainworker');
+// 	watcher1.removePath(OS.Path.join(OS.Constants.Path.desktopDir)).then(val=>console.log('mainworker removed:', val)).catch(caught=>console.error('caught:', err));
+// }, 10000);

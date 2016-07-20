@@ -10,7 +10,7 @@ function startup(aData, aReason) {
 
 	Services.scriptloader.loadSubScript('chrome://comm/content/resources/scripts/Comm/Comm.js');
 	Services.scriptloader.loadSubScript('chrome://comm/content/resources/scripts/DirectoryWatcherPaths.js');
-	Services.scriptloader.loadSubScript('chrome://comm/content/resources/scripts/watcher/DirectoryWatcherMainthread.js');
+	Services.scriptloader.loadSubScript('chrome://comm/content/resources/scripts/watcher/DirectoryWatcherMainthreadSubscript.js');
 
 	// if you want to pass a string to dwMainthreadInit then make sure gWhateverWorker is global. its good to make it global though, so on shutdown you can unregister it (which will terminate/clean up the workers)
 	gWhateverWorker = new Comm.server.worker('chrome://comm/content/resources/scripts/MainWorker.js', undefined, undefined, dwShutdownMT);

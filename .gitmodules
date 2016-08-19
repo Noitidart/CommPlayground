@@ -1,3 +1,6 @@
-[submodule "resources/scripts/Comm"]
-	path = resources/scripts/Comm
-	url = git@github.com:Noitidart/Comm
+[submodule "resources/scripts/jscSystemHotkey"]
+	path = resources/scripts/jscSystemHotkey
+	url = git@github.com:Noitidart/jscSystemHotkey
+[submodule "resources/scripts/ostypes"]
+	path = resources/scripts/ostypes
+	url = git@github.com:Noitidart/ostypes

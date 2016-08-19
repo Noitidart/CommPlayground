@@ -4,7 +4,7 @@
 	   - file, You can obtain one at http://mozilla.org/MPL/2.0/. -->
 	<RDF xmlns="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:em="http://www.mozilla.org/2004/em-rdf#">
 	  <Description about="urn:mozilla:install-manifest">
-		<em:id>Comm@jetpack</em:id>
+		<em:id>jscSystemHotkey-demo@jetpack</em:id>
 		<em:version>1.0</em:version>
 		<em:type>2</em:type>
 		<em:bootstrap>true</em:bootstrap>
@@ -30,19 +30,17 @@
 
 		<!-- Front End MetaData -->
 		<!-- must provide default non-localized because It's used as a default on AMO. It's used as a default by the add-on manager, with the possibility of other locales overriding it. Failure to provide a non-localized name will lead to failed upload on AMO. -->
-		<em:name>Comm</em:name>
-		<em:description>Addon skeleton with CommAPI</em:description>
+		<em:name>jscSystemHotkey-demo</em:name>
+		<em:description>Demos system wide hotkey submodule</em:description>
 		<em:creator>Noitidart</em:creator>
-		<em:contributor>no one for icon</em:contributor>
 
 		<!-- start localizing - For each entry in default data MUST have equivalent in each localized block -->
 		<em:localized>
 			<Description>
 				<em:locale>en-US</em:locale>
-				<em:name>Comm</em:name>
-				<em:description>Addon skeleton with CommAPI</em:description>
+				<em:name>jscSystemHotkey-demo</em:name>
+				<em:description>Demos system wide hotkey submodule</em:description>
 				<em:creator>Noitidart</em:creator>
-				<em:contributor>no one for icon</em:contributor>
 			</Description>
 		</em:localized>
 	  </Description>

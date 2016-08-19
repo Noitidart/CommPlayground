@@ -1,2 +1,2 @@
-content comm ./ contentaccessible=yes
-locale comm en-US locale/en-US/
+content jscsystemhotkey-demo ./ contentaccessible=yes
+locale jscsystemhotkey-demo en-US locale/en-US/

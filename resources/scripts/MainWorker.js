@@ -4,7 +4,7 @@ var TOOLKIT; // dont use `const` otherwise `ostypes_x11.js` will not be able to 
 
 // Imports
 importScripts(PATH_SCRIPTS + 'Comm/Comm.js');
-var { callInBootstrap } = CommHelper.mainworker;
+var { callInBootstrap } = CommHelper.mainworker; // jscSystemHotkey needs `callInBootstrap`
 
 importScripts(PATH_SCRIPTS + 'jscSystemHotkey/shtkMainworkerSubscript.js');
 
@@ -82,11 +82,9 @@ switch (OS.Constants.Sys.Name.toLowerCase()) {
     case 'darwin':
             gHKI.hotkeys = [
                 {
-                    code: ostypes.CONST.KEY_Space,  // can use any `ostypes.CONST.KEY_***` or `ostypes.CONST.NX_***`, see `ostypes_mac.jsm` for list of values. See section "About mac_method" to see which method supports which keys, I haven't fully studied this, so please your knowledge/experiences with it
-                    mods: {
-                        shift: true
-                    },
-                    desc: 'Shift + Space Bar',
+                    code: ostypes.CONST.NX_KEYTYPE_PLAY,  // can use any `ostypes.CONST.KEY_***` or `ostypes.CONST.NX_***`, see `ostypes_mac.jsm` for list of values. See section "About mac_method" to see which method supports which keys, I haven't fully studied this, so please your knowledge/experiences with it
+                    // mods: {}, // mods not yet supported for `mac_method` of `corefoundation`
+                    desc: 'Media Key: Play',
                     callback: 'blah',
                     mac_method: 'corefoundation' // this key is only available to macs, see the section "About mac_method" to learn about this // other possible values are 'corefoundation' and 'objc'
                 },

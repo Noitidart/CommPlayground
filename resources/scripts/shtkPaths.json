@@ -1,0 +1,5 @@
+{
+	"jscsystemhotkey": "chrome://jscsystemhotkey-demo/content/resources/scripts/jscSystemHotkey/",
+	"comm": "chrome://jscsystemhotkey-demo/content/resources/scripts/Comm/",
+	"ostypes": "chrome://jscsystemhotkey-demo/content/resources/scripts/ostypes/"
+}

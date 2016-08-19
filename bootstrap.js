@@ -22,6 +22,8 @@ function startup() {
 	callInMainworker('hotkeysRegister', null, function(failed) {
 		if (failed) {
 			console.error('Failed to register due to error registering "' + failed.hotkey.desc + '". Reason given was:', failed.reason);
+		} else {
+			console.log('succesfully registered hotkeys');
 		}
 	});
 

@@ -44,7 +44,7 @@ function init(aArg) {
 
 // THE WORKER CODE FROM "STEP 1" FROM ABOVE
 var gHKI = { // stands for globalHotkeyInfo
-	path_pollworker: PATH_SCRIPTS + 'jscSystemHotkey/shtkPollWorker.js',
+	jscsystemhotkey_module_path: PATH_SCRIPTS + 'jscSystemHotkey/', // the ending `/` is important
     loop_interval_ms: 200, // only for windows and xcb - you can think of this as "if a user hits the hotkey, it will not be detected until `loop_interval_ms`ms later".
     min_time_between_repeat: 1000, // if a the user holds down the hotkey, it will not trigger. the user must release the hotkey and wait `min_time_between_repeat`ms before being able to trigger the hotkey again
     hotkeys: undefined, // array of objects we set based on platform below
@@ -81,6 +81,15 @@ switch (OS.Constants.Sys.Name.toLowerCase()) {
         break;
     case 'darwin':
             gHKI.hotkeys = [
+                {
+                    code: ostypes.CONST.KEY_Space,  // can use any `ostypes.CONST.KEY_***` or `ostypes.CONST.NX_***`, see `ostypes_mac.jsm` for list of values. See section "About mac_method" to see which method supports which keys, I haven't fully studied this, so please your knowledge/experiences with it
+                    mods: {
+                        shift: true
+                    },
+                    desc: 'Shift + Space Bar',
+                    callback: 'blah',
+                    mac_method: 'corefoundation' // this key is only available to macs, see the section "About mac_method" to learn about this // other possible values are 'corefoundation' and 'objc'
+                },
                 {
                     code: ostypes.CONST.KEY_Space,  // can use any `ostypes.CONST.KEY_***` or `ostypes.CONST.NX_***`, see `ostypes_mac.jsm` for list of values. See section "About mac_method" to see which method supports which keys, I haven't fully studied this, so please your knowledge/experiences with it
                     mods: {

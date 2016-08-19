@@ -38,6 +38,8 @@ function onBeforeTerminate() {
 
 function init(aArg) {
 	({ TOOLKIT } = aArg);
+
+    setTimeout(hotkeysUnregister, 10000);
 }
 
 // THE WORKER CODE FROM "STEP 1" FROM ABOVE

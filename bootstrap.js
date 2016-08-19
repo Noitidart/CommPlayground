@@ -18,10 +18,17 @@ function startup() {
 
 	// Register the hotkeys
 	callInMainworker('hotkeysRegister', null, function(failed) {
-	  console.error('Failed to register due to error registering "' + failed.hotkey.desc + '". Reason given was:', failed.reason);
+		if (failed) {
+			console.error('Failed to register due to error registering "' + failed.hotkey.desc + '". Reason given was:', failed.reason);
+		}
 	});
 
 }
+function shutdown() {
+	Comm.server.unregAll('worker');
+}
+function install() {}
+function uninstall() {}
 
 function onBeforeTerminate() {
   return new Promise(resolve =>

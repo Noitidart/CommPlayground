@@ -96,7 +96,7 @@ switch (OS.Constants.Sys.Name.toLowerCase()) {
         // xcb (*nix/bsd)
         gHKI.hotkeys = [
             {
-                code: ostypes.CONST.XK_Space, // can use any `ostypes.CONST.XK_***`, see `ostypes_x11.jsm` for list of values
+                code: ostypes.CONST.XK_space, // can use any `ostypes.CONST.XK_***`, see `ostypes_x11.jsm` for list of values
                 mods: {
                     shift: true
                 },
@@ -105,7 +105,7 @@ switch (OS.Constants.Sys.Name.toLowerCase()) {
             },
             // because xcb (*nix/bsd) count capslock and numlock, we need to add three more combos just for these
             {
-                code: ostypes.CONST.XK_Space,
+                code: ostypes.CONST.XK_space,
                 mods: {
                     shift: true,
                     capslock: true
@@ -114,7 +114,7 @@ switch (OS.Constants.Sys.Name.toLowerCase()) {
                 callback: 'blah'
             },
             {
-                code: ostypes.CONST.XK_Space,
+                code: ostypes.CONST.XK_space,
                 mods: {
                     shift: true,
                     numlock: true
@@ -123,7 +123,7 @@ switch (OS.Constants.Sys.Name.toLowerCase()) {
                 callback: 'blah'
             },
             {
-                code: ostypes.CONST.XK_Space,
+                code: ostypes.CONST.XK_space,
                 mods: {
                     shift: true,
                     capslock: true,

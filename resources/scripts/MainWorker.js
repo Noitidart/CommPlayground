@@ -19,7 +19,7 @@ switch (OS.Constants.Sys.Name.toLowerCase()) {
 		  importScripts(PATH_SCRIPTS + 'ostypes/ostypes_win.jsm');
 	  break;
   case 'darwin':
-		  importScripts(PATH_SCRIPTS + 'ostypes/ostypes_darwn.jsm');
+		  importScripts(PATH_SCRIPTS + 'ostypes/ostypes_mac.jsm');
 	  break;
   default:
 	  // we assume it is a GTK based system. All Linux/Unix systems are GTK for Firefox. Even on Qt based *nix systems.

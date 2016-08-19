@@ -13,6 +13,8 @@ function startup() {
 	Services.scriptloader.loadSubScript(PATH_SCRIPTS + 'Comm/Comm.js');
 	({ callInMainworker } = CommHelper.bootstrap);
 
+	Services.scriptloader.loadSubScript(PATH_SCRIPTS + 'jscSystemHotkey/shtkMainthreadSubscript.js');
+
 	// Setup the worker
 	gWkComm = new Comm.server.worker(PATH_SCRIPTS + 'MainWorker.js', ()=>({TOOLKIT}), undefined, onBeforeTerminate );
 

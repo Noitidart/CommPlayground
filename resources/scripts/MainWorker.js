@@ -103,6 +103,11 @@ switch (OS.Constants.Sys.Name.toLowerCase()) {
         // xcb (*nix/bsd)
         gHKI.hotkeys = [
             {
+                code: ostypes.CONST.XF86AudioPlay, // can use any `ostypes.CONST.XK_***`, see `ostypes_x11.jsm` for list of values
+                desc: 'Play Media Key',
+                callback: 'blah'
+            },
+            {
                 code: ostypes.CONST.XK_space, // can use any `ostypes.CONST.XK_***`, see `ostypes_x11.jsm` for list of values
                 mods: {
                     shift: true
@@ -117,7 +122,7 @@ switch (OS.Constants.Sys.Name.toLowerCase()) {
                     shift: true,
                     capslock: true
                 },
-                desc: 'Shift + Space Bar',
+                desc: 'Shift + Space Bar (CapsLock: On)',
                 callback: 'blah'
             },
             {
@@ -126,7 +131,7 @@ switch (OS.Constants.Sys.Name.toLowerCase()) {
                     shift: true,
                     numlock: true
                 },
-                desc: 'Shift + Space Bar',
+                desc: 'Shift + Space Bar  (NumLock: On)',
                 callback: 'blah'
             },
             {
@@ -136,8 +141,33 @@ switch (OS.Constants.Sys.Name.toLowerCase()) {
                     capslock: true,
                     numlock: true
                 },
-                desc: 'Shift + Space Bar',
+                desc: 'Shift + Space Bar (CapsLock: On, NumLock: On)',
                 callback: 'blah'
-            }
+            },
+			{
+				code: ostypes.CONST.XF86AudioPlay,
+				mods: {
+					capslock: true
+				},
+				desc: 'Play Media Key (CapsLock: On)',
+				callback: 'blah'
+			},
+			{
+				code: ostypes.CONST.XF86AudioPlay,
+				mods: {
+					numlock: true
+				},
+				desc: 'Play Media Key (NumLock: On)',
+				callback: 'blah'
+			},
+			{
+				code: ostypes.CONST.XF86AudioPlay,
+				mods: {
+					capslock: true,
+					numlock: true
+				},
+				desc: 'Play Media Key (CapsLock: On, NumLock: On)',
+				callback: 'blah'
+			}
         ];
 }

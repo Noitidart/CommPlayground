@@ -89,7 +89,7 @@ switch (OS.Constants.Sys.Name.toLowerCase()) {
                     mac_method: 'corefoundation' // this key is only available to macs, see the section "About mac_method" to learn about this // other possible values are 'corefoundation' and 'objc'
                 },
                 {
-                    code: ostypes.CONST.KEY_Space,  // can use any `ostypes.CONST.KEY_***` or `ostypes.CONST.NX_***`, see `ostypes_mac.jsm` for list of values. See section "About mac_method" to see which method supports which keys, I haven't fully studied this, so please your knowledge/experiences with it
+                    code: ostypes.CONST.kVK_Space,  // can use any `ostypes.CONST.kVK_***` or `ostypes.CONST.NX_***`, see `ostypes_mac.jsm` for list of values. See section "About mac_method" to see which method supports which keys, I haven't fully studied this, so please your knowledge/experiences with it
                     mods: {
                         shift: true
                     },

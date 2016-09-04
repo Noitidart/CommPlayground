@@ -1,0 +1,5 @@
+{
+	"comm": "chrome://jscfilewatcher-demo/content/resources/scripts/Comm/Comm.js",
+	"ostypes_dir": "chrome://jscfilewatcher-demo/content/resources/scripts/ostypes/",
+	"watcher_dir": "chrome://jscfilewatcher-demo/content/resources/scripts/watcher/"
+}

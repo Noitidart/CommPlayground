@@ -1,13 +1,39 @@
-// Import DirectoryWatcher
-importScripts('chrome://comm/content/resources/scripts/watcher/DirectoryWatcherWorkerSubscript.js');
-importScripts('chrome://comm/content/resources/scripts/DirectoryWatcherPaths.js');
-
 // Globals
 var TOOLKIT;
 var dummystartup = ()=>0;
+const PATH_SCRIPTS = 'chrome://jscfilewatcher-demo/content/resources/scripts/';
+
+// import Comm
+importScripts(PATH_SCRIPTS + 'Comm/Comm.js');
+var { callInBootstrap } = CommHelper.mainworker; // jscFileWatcher needs `callInBootstrap`
+
+var gBsComm = new Comm.client.worker();
+
+// import ostypes
+importScripts(PATH_SCRIPTS + 'ostypes/cutils.jsm');
+importScripts(PATH_SCRIPTS + 'ostypes/ctypes_math.jsm');
+
+switch (OS.Constants.Sys.Name.toLowerCase()) {
+  case 'winnt':
+  case 'winmo':
+  case 'wince':
+		  importScripts(PATH_SCRIPTS + 'ostypes/ostypes_win.jsm');
+	  break;
+  case 'darwin':
+		  importScripts(PATH_SCRIPTS + 'ostypes/ostypes_mac.jsm');
+	  break;
+  default:
+	  // we assume it is a GTK based system. All Linux/Unix systems are GTK for Firefox. Even on Qt based *nix systems.
+	  importScripts(PATH_SCRIPTS + 'ostypes/ostypes_x11.jsm');
+}
+
+// Import DirectoryWatcher
+var dwPathWatcherDir = PATH_SCRIPTS + 'watcher/';
+importScripts(PATH_SCRIPTS + 'watcher/dwMainworkerSubscript.js');
 
 function init(aArg) {
 	TOOLKIT = aArg;
+	console.log('TOOLKIT set to:', TOOLKIT);
 }
 
 // Addon functionalities

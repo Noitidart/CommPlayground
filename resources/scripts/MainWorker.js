@@ -3,7 +3,12 @@ importScripts('chrome://comm/content/resources/scripts/watcher/DirectoryWatcherW
 importScripts('chrome://comm/content/resources/scripts/DirectoryWatcherPaths.js');
 
 // Globals
+var TOOLKIT;
 var dummystartup = ()=>0;
+
+function init(aArg) {
+	TOOLKIT = aArg;
+}
 
 // Addon functionalities
 console.log('ok ready');

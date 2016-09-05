@@ -11,11 +11,9 @@ function onBeforeMainworkerTerminate() {
 	console.log('in onBeforeMainworkerTerminate');
 	var promiseallarr = [];
 
-	promiseallarr.push(new Promise(resolve => {
-		// callInMainworker('dwShutdown', null, ()=>resolve())
-		console.log('calling dwShutdown in mainworker');
-		callInMainworker('dwShutdown', null, ()=>{console.log('ok dwShutdown done'); resolve()})
-	}));
+	promiseallarr.push(new Promise(resolve =>
+		callInMainworker('dwShutdown', null, ()=>resolve())
+	));
 
 	console.log('ok returning onBeforeMainworkerTerminate a promise');
 	return Promise.all(promiseallarr);

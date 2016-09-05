@@ -1,3 +1,5 @@
+importScripts('resource://gre/modules/osfile.jsm');
+
 // Globals
 var TOOLKIT;
 var dummystartup = ()=>0;
@@ -45,7 +47,7 @@ watcher1.addPath(OS.Constants.Path.desktopDir);
 // watcher1.addPath(OS.Path.join(OS.Constants.Path.desktopDir, 'dist'));
 // watcher1.addPath(OS.Path.join(OS.Constants.Path.desktopDir, 'bin'));
 
-// setTimeout(function() {
-// 	console.log('triggering remove path from mainworker');
-// 	watcher1.removePath(OS.Path.join(OS.Constants.Path.desktopDir)).then(val=>console.log('mainworker removed:', val)).catch(caught=>console.error('caught:', err));
-// }, 10000);
+setTimeout(function() {
+	console.log('triggering remove path from mainworker');
+	watcher1.removePath(OS.Path.join(OS.Constants.Path.desktopDir)).then(val=>console.log('mainworker removed:', val)).catch(caught=>console.error('caught:', err));
+}, 10000);

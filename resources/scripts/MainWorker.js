@@ -33,11 +33,11 @@ importScripts(PATH_SCRIPTS + 'watcher/dwMainworkerSubscript.js');
 
 function init(aArg) {
 	TOOLKIT = aArg;
-	console.log('TOOLKIT set to:', TOOLKIT);
+	console.log('TOOLKIT set to:', TOOLKIT); // need TOOLKIT before doing addPath because
+
 }
 
 // Addon functionalities
-console.log('ok ready');
 var watcher1 = new DirectoryWatcher(function(aFilePath, aEventType, aExtra) {
 	console.log('in watcher1 handler:', 'aFilePath:', aFilePath, 'aEventType:', aEventType, 'aExtra:', aExtra);
 });

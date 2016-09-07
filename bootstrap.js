@@ -32,7 +32,7 @@ function startup(aData, aReason) {
 	Services.scriptloader.loadSubScript(PATH_SCRIPTS + 'watcher/dwMainthreadSubscript.js');
 
 	// if you want to pass a string to dwMainthreadInit then make sure gWkComm is global. its good to make it global though, so on shutdown you can unregister it (which will terminate/clean up the workers)
-	gWkComm = new Comm.server.worker(PATH_SCRIPTS + 'MainWorker.js', ()=>TOOLKIT, undefined, onBeforeMainworkerTerminate);
+	gWkComm = new Comm.server.worker(PATH_SCRIPTS + 'MainWorker.js', /*()=>TOOLKIT*/undefined, undefined, onBeforeMainworkerTerminate);
 
 	callInMainworker('dummystartup');
 

@@ -34,8 +34,8 @@ var dwPathWatcherDir = PATH_SCRIPTS + 'watcher/';
 importScripts(PATH_SCRIPTS + 'watcher/dwMainworkerSubscript.js');
 
 function init(aArg) {
-	TOOLKIT = aArg;
-	console.log('TOOLKIT set to:', TOOLKIT); // need TOOLKIT before doing addPath because
+	// TOOLKIT = aArg;
+	// console.log('TOOLKIT set to:', TOOLKIT);
 
 }
 

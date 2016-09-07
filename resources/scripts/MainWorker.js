@@ -40,7 +40,7 @@ function init(aArg) {
 }
 
 // Addon functionalities
-var watcher1 = new DirectoryWatcher(function(aPath, aEventType, aOldName) {
+var watcher1 = new OS.File.DirectoryWatcher(function(aPath, aEventType, aOldName) {
 	console.error(aEventType, 'aPath:', aPath, 'aOldName:', aOldName);
 });
 watcher1.addPath(OS.Constants.Path.desktopDir);

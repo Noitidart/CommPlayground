@@ -43,7 +43,7 @@ function init(aArg) {
 var watcher1 = new OS.File.DirectoryWatcher(function(aPath, aEventType, aOldName) {
 	console.error(aEventType, 'aPath:', aPath, 'aOldName:', aOldName);
 });
-watcher1.addPath(OS.Constants.Path.desktopDir);
+watcher1.addPath(OS.Constants.Sys.Name.toLowerCase() == 'android' ? OS.Constants.Path.profileDir : OS.Constants.Path.desktopDir);
 // watcher1.addPath(OS.Path.join(OS.Constants.Path.desktopDir, 'dist'));
 // watcher1.addPath(OS.Path.join(OS.Constants.Path.desktopDir, 'bin'));
 

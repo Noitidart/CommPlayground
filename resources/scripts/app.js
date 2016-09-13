@@ -11,6 +11,8 @@ function init() {
 	console.log('in init');
 	({ callInFramescript, callInMainworker, callInBootstrap } = CommHelper.contentinframescript);
 
+	callInFramescript('test');
+	
 	callInBootstrap('fetchCore', undefined, function(aArg, aComm) {
 		core = aArg;
 		console.log('app.js core update - ', core);

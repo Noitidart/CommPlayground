@@ -66,7 +66,9 @@ function AboutFactory(component) {
 	this.register();
 }
 // end - about module
-
+function test() {
+	console.log('in test');
+}
 // start - pageLoader
 var pageLoader = {
 	// start - devuser editable
@@ -91,7 +93,7 @@ var pageLoader = {
 
 		switch (pageLoader.matches(contentWindow.location.href, contentWindow.location)) {
 			case MATCH_APP:
-					gWinComm = new Comm.server.content(contentWindow);
+					gWinComm = new Comm.server.content(contentWindow, undefined, undefined, undefined, Services.vc.compare(core.firefox.version, '46.*') > 0 ? true : false); // if i use true, then even if URI_SAFE_FOR_UNTRUSTED_CONTENT and URI_MUST_LOAD_IN_CHILD flags are not there, the `content`/window fails to `postMessage` back out, for versions of Firefox < 46
 				break;
 			case MATCH_TWITTER:
 					var principal = contentWindow.document.nodePrincipal; // contentWindow.location.origin (this is undefined for about: pages) // docShell.chromeEventHandler.contentPrincipal (chromeEventHandler no longer has contentPrincipal)
